@@ -74,12 +74,12 @@ class Pomodoro {
             this.timerStartedTime = new Date();
 
             if (!this.textOnly) {
-                this.dispatcher = this.connection.playFile('./sounds/time-over.ogg', {
+                this.dispatcher = this.connection.play('./sounds/time-over.ogg', {
                     volume: this.volume,
                 });
 
                 this.dispatcher.on('end', () => {
-                    this.dispatcher = this.connection.playFile(
+                    this.dispatcher = this.connection.play(
                         './sounds/silence-fixer.ogg'
                     );
                 });
@@ -143,3 +143,5 @@ class Pomodoro {
         this.volume = volume;
     }
 }
+
+module.exports = Pomodoro;
