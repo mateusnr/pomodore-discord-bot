@@ -1,9 +1,22 @@
+//@ts-check
 require('dotenv').config();
 const Discord = require('discord.js');
 const Pomodoro = require('./pomodoro');
 const Constants = require('./constants');
+const path = require('path');
+const { CommandoClient } = require('discord.js-commando');
 
-const client = new Discord.Client();
+const client = new CommandoClient({
+    commandPrefix: '?',
+    owner: '233342139889614848'
+});
+
+client.registry
+    .registerDefaultTypes()
+    .registerGroups([
+        ['pomodoro', 'Pomodoro commands']
+    ])
+    .registerCommandsIn(path.join(__dirname, 'commands'));
 
 if (process.env.SH_TOKEN == '' || process.env.SH_TOKEN == undefined) {
     client.login(process.env.DJS_TOKEN);
@@ -12,8 +25,8 @@ if (process.env.SH_TOKEN == '' || process.env.SH_TOKEN == undefined) {
 }
 
 client.on('ready', () => {
-    console.log('❤');
-    client.user.setActivity('Type pd!help');
+    console.log(`Logged in as ${client.user.tag}. ID: ${client.user.id}`);
+    client.user.setActivity('Use pd!help');
 });
 
 const COMMANDS = [
@@ -144,7 +157,7 @@ client.on('message', async (message) => {
             return;
         }
 
-        if (message.member.voice) {
+        if (message.member.voice.channel) {
             let pomodoro = container.pomodoros.filter(
                 (pomodoro) => pomodoro.id == message.guild.id
             );
@@ -252,9 +265,9 @@ client.on('message', async (message) => {
         }
     }
 
-    if (args[0] == COMMANDS[7]) {
+    /*if (args[0] == COMMANDS[7]) {
         message.author.send(Constants.HELP_MESSAGE_EMBED);
-    }
+    }*/
 
     if (args[0] == COMMANDS[4]) {
         let pomodoro = container.pomodoros.filter(
