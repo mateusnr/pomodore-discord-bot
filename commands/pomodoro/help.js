@@ -1,5 +1,4 @@
 //@ts-check
-const { Message } = require('discord.js');
 const { Command } = require('discord.js-commando');
 const Constants = require('./../../constants');
 

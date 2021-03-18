@@ -144,4 +144,20 @@ class Pomodoro {
     }
 }
 
-module.exports = Pomodoro;
+class PomodoroManager {
+    constructor() {
+        this.pomodoros = [];
+    }
+
+    addPomodoro(pomodoro) {
+        this.pomodoros.push(pomodoro);
+    }
+
+    removePomodoro(id) {
+        this.pomodoros = this.pomodoros.filter((pomodoro) => pomodoro.id != id);
+    }
+}
+
+let pomodoroManager = new PomodoroManager();
+
+module.exports = { Pomodoro, PomodoroManager, pomodoroManager };
