@@ -7,7 +7,7 @@ const HELP_MESSAGE_EMBED = new Discord.MessageEmbed()
     .addFields(
         [
             {
-                name: 'Start the pomodoro with default values (25, 5, 15)',
+                name: 'Start the pomodoro with default values (45, 15, 15)',
                 value: 'pd!start',
                 inline: true
             },

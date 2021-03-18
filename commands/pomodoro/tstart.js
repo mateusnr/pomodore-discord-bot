@@ -15,19 +15,25 @@ module.exports = class TextStartPomodoroCommand extends Command {
                     key: 'workTime',
                     prompt: 'What is the pomodoro duration?',
                     type: 'integer',
-                    default: 45
+                    default: 45,
+                    min: 5,
+                    max: 120
                 },
                 {
                     key: 'shortBreakTime',
                     prompt: 'What is the short break duration?',
                     type: 'integer',
-                    default: 15
+                    default: 15,
+                    min: 5,
+                    max: 120
                 },
                 {
                     key: 'longBreakTime',
                     prompt: 'What is the long break duration?',
                     type: 'integer',
-                    default: 15
+                    default: 15,
+                    min: 5,
+                    max: 120
                 }
 
             ]
@@ -35,6 +41,7 @@ module.exports = class TextStartPomodoroCommand extends Command {
     }
 
     run(message, { workTime, shortBreakTime, longBreakTime }) {
+        // TODO: simplify this check, this is repeated code
         let pomodoro = pomodoroManager.pomodoros.filter(
             (pomodoro) => pomodoro.id == message.guild.id
         );
