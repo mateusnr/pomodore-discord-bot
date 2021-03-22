@@ -10,6 +10,7 @@ module.exports = class TextStartPomodoroCommand extends Command {
             group: 'pomodoro',
             description: '$',
             memberName: 'tstart',
+            argsPromptLimit: 0,
             args: [
                 {
                     key: 'workTime',

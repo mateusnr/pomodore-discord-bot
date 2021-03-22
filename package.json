@@ -7,6 +7,7 @@
   "description": "A pomodoro discord bot",
   "main": "bot.js",
   "scripts": {
+    "dev": "nodemon bot.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -18,5 +19,8 @@
     "dotenv": "^8.2.0",
     "ffmpeg-static": "^4.2.7",
     "sqlite3": "^5.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }
