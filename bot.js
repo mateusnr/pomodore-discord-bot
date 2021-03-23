@@ -138,26 +138,6 @@ client.on('message', async (message) => {
         message.channel.send("Pomodoro started! Let's get to work!");
     }
 
-    if (args[0] == COMMANDS[4]) {
-        let pomodoro = pomodoroManager.pomodoros.filter(
-            (pomodoro) => pomodoro.id == message.guild.id
-        );
-
-        if (pomodoro.length == 0) {
-            message.reply("There's no pomodoro currently running!");
-            return;
-        }
-
-        if (!pomodoro[0].textOnly) {
-            if (!message.member.voice.channel) {
-                message.reply('You are not in a voice channel!');
-                return;
-            }
-        }
-
-        pomodoro[0].addToDM(message.author.id, message);
-    }
-
     if (args[0] == COMMANDS[5]) {
         let pomodoro = pomodoroManager.pomodoros.filter(
             (pomodoro) => pomodoro.id == message.guild.id
