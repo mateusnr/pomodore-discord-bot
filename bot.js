@@ -138,31 +138,7 @@ client.on('message', async (message) => {
         message.channel.send("Pomodoro started! Let's get to work!");
     }
 
-    if (args[0] == COMMANDS[5]) {
-        let pomodoro = pomodoroManager.pomodoros.filter(
-            (pomodoro) => pomodoro.id == message.guild.id
-        );
-
-        if (pomodoro.length == 0) {
-            message.reply("There's no pomodoro currently running!");
-            return;
-        }
-
-        if (!pomodoro[0].textOnly) {
-            pomodoro[0].toggleNotifications(message);
-        } else {
-            message.channel.send(
-                "You can't disable text messages in a text-only pomodoro!"
-            );
-            return;
-        }
-
-        if (!message.member.voice.channel) {
-            message.reply('You are not in a voice channel!');
-            return;
-        }
-    }
-
+    // volume 
     if (args[0] == COMMANDS[6]) {
         let pomodoro = pomodoroManager.pomodoros.filter(
             (pomodoro) => pomodoro.id == message.guild.id
@@ -200,49 +176,4 @@ client.on('message', async (message) => {
         }
     }
 
-    if (args[0] == COMMANDS[8]) {
-        let messagesProcessed = 0;
-        let allDeleted = true;
-        message.channel
-            .fetchMessages({ limit: 30 })
-            .then((messages) => {
-                messages.forEach((message) => {
-                    let messageContent = message.content.trim().split(' ');
-                    if (
-                        COMMANDS.includes(messageContent[0]) ||
-                        message.author.id == client.user.id
-                    ) {
-                        message
-                            .delete()
-                            .then(() => {
-                                messagesProcessed++;
-                                if (messagesProcessed == 29) {
-                                    if (!allDeleted) {
-                                        message.channel.send(
-                                            'There was a problem deleting some of the messages! Please check my permissions!'
-                                        );
-                                    }
-                                }
-                            })
-                            .catch(() => {
-                                messagesProcessed++;
-                                allDeleted = false;
-
-                                if (messagesProcessed == 29) {
-                                    if (!allDeleted) {
-                                        message.channel.send(
-                                            'There was a problem deleting some of the messages! Please check my permissions!'
-                                        );
-                                    }
-                                }
-                            });
-                    }
-                });
-            })
-            .catch(() => {
-                message.channel.send(
-                    'There was a problem deleting the messages! Please check my permissions!'
-                );
-            });
-    }
 });
