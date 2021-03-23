@@ -138,34 +138,6 @@ client.on('message', async (message) => {
         message.channel.send("Pomodoro started! Let's get to work!");
     }
 
-    if (args[0] == COMMANDS[3]) {
-        let pomodoro = pomodoroManager.pomodoros.filter(
-            (pomodoro) => pomodoro.id == message.guild.id
-        );
-
-        if (pomodoro.length == 0) {
-            message.reply("There's no pomodoro currently running!");
-            return;
-        }
-
-        let now = new Date();
-        let timePassed = now.getTime() - pomodoro[0].timerStartedTime.getTime();
-        let timeLeft;
-
-        if (pomodoro[0].time % 2 != 0) {
-            timeLeft = parseInt((pomodoro[0].workTime - timePassed) / 60000);
-            message.channel.send(
-                `${timeLeft + 1}min left to your break! Keep it up!`
-            );
-        } else if (pomodoro[0].time % 2 == 0 && pomodoro[0].time != 8) {
-            timeLeft = parseInt((pomodoro[0].smallBreak - timePassed) / 60000);
-            message.channel.send(`${timeLeft + 1}min left to start working!`);
-        } else {
-            timeLeft = parseInt((pomodoro[0].bigBreak - timePassed) / 60000);
-            message.channel.send(`${timeLeft + 1}min left to start working!`);
-        }
-    }
-
     if (args[0] == COMMANDS[4]) {
         let pomodoro = pomodoroManager.pomodoros.filter(
             (pomodoro) => pomodoro.id == message.guild.id
