@@ -36,7 +36,6 @@ module.exports = class TextStartPomodoroCommand extends Command {
                     min: 5,
                     max: 120
                 }
-
             ]
         })
     }

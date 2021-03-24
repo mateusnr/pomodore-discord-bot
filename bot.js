@@ -80,64 +80,6 @@ client.on('message', async (message) => {
 
     const args = message.content.trim().split(' ');
 
-    if (args[0] === COMMANDS[0]) {
-        //Check arguments
-        if (!checkParams(args[1], args[2], args[3], message)) {
-            return;
-        }
-
-        if (message.member.voice.channel) {
-            let pomodoro = pomodoroManager.pomodoros.filter(
-                (pomodoro) => pomodoro.id == message.guild.id
-            );
-
-            if (pomodoro.length > 0) {
-                message.reply("There's already a pomodoro running!");
-                return;
-            }
-
-            try {
-                if (args[1] && args[2] && args[3]) {
-                    pomodoroManager.addPomodoro(
-                        new Pomodoro(
-                            parseInt(args[1] * 60000),
-                            parseInt(args[2] * 60000),
-                            parseInt(args[3] * 60000),
-                            await message.member.voice.channel.join(),
-                            message.guild.id,
-                            message,
-                            false
-                        )
-                    );
-                } else {
-                    pomodoroManager.addPomodoro(
-                        new Pomodoro(
-                            1500000,
-                            300000,
-                            900000,
-                            await message.member.voice.channel.join(),
-                            message.guild.id,
-                            message,
-                            false
-                        )
-                    );
-                }
-            } catch (err) {
-                console.log(err);
-                message.channel.send(
-                    "I'm struggling to join your voice channel! Please check my permissions!"
-                );
-                return;
-            }
-        } else {
-            message.channel.send(
-                'You have to be in a voice channel to start a pomodoro!'
-            );
-            return;
-        }
-        message.channel.send("Pomodoro started! Let's get to work!");
-    }
-
     // volume 
     if (args[0] == COMMANDS[6]) {
         let pomodoro = pomodoroManager.pomodoros.filter(
