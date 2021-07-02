@@ -76,6 +76,11 @@ module.exports = class StartPomodoroCommand extends Command {
             return;
         }
 
-        return message.channel.send("Pomodoro started! Let's get to work!");
+        return message.channel.send(
+            `Pomodoro started!\n`
+            + `Duration: **${workTime}m**\n`
+            + `Short break: **${shortBreakTime}m**\n`
+            + `Long break: **${longBreakTime}m**\n`
+        );
     }
 }
