@@ -15,8 +15,6 @@ module.exports = class VolumePomodoroCommand extends Command {
                     key: 'volume',
                     prompt: 'What is the volume?',
                     type: 'integer',
-                    min: 1,
-                    max: 100,
                     default: 50
                 }
             ]
@@ -41,6 +39,11 @@ module.exports = class VolumePomodoroCommand extends Command {
 
         if (!message.member.voice.channel) {
             message.reply('You are not in a voice channel!');
+            return;
+        }
+
+        if (!(volume >= 1 && volume <= 100)) {
+            message.channel.send('Please insert a valid number between 1 and 100');
             return;
         }
 
