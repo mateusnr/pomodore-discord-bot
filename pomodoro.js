@@ -78,7 +78,7 @@ class Pomodoro {
                     volume: this.volume,
                 });
 
-                this.dispatcher.on('end', () => {
+                this.dispatcher.on('finish', () => {
                     this.dispatcher = this.connection.play(
                         './sounds/silence-fixer.ogg'
                     );
