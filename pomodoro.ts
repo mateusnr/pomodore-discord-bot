@@ -1,17 +1,19 @@
 import Discord from "discord.js";
 
 export default class Pomodoro {
+    client: Discord.Client;
+
     workTime: number;
     smallBreak: number;
     bigBreak: number;
-    interval: number;
+    interval?: number;
     connection?: Discord.VoiceConnection;
     id: string;
     message: Discord.Message;
     textOnly: boolean;
 
     time: number;
-    dispatcher: Discord.StreamDispatcher;
+    dispatcher?: Discord.StreamDispatcher;
     textAlerts: boolean;
     volume: number;
 
@@ -20,9 +22,10 @@ export default class Pomodoro {
     timerStartedTime: Date; 
     alertText: string; 
 
-    timer: NodeJS.Timeout;
+    timer?: number;
 
     constructor(
+        client: Discord.Client,
         workTime: number,
         smallBreak: number,
         bigBreak: number,
@@ -31,6 +34,7 @@ export default class Pomodoro {
         message: Discord.Message,
         textOnly: boolean
     ) {
+        this.client = client;
         this.id = id;
         this.workTime = workTime;
         this.smallBreak = smallBreak;
@@ -42,10 +46,7 @@ export default class Pomodoro {
         this.message = message;
         this.time = 1;
         this.timerStartedTime = new Date();
-        this.dispatcher = null;
-        this.timer = null;
         this.alertText = '';
-        this.interval = null;
         this.textOnly = textOnly;
 
         // if (!textOnly) {
@@ -57,21 +58,6 @@ export default class Pomodoro {
 
     startANewCycle() {
         try {
-            if (this.time >= 20) {
-                this.stopTimer();
-
-                this.message.channel.send(
-                    'You reached the maximum pomodoro cycles! Rest a little!'
-                );
-
-                if (!this.textOnly) {
-                    this.connection.disconnect();
-                }
-
-                container.removePomodoro(this.message.guild.id);
-                return;
-            }
-
             if (this.time % 2 != 0 && this.time != 7) {
                 this.interval = this.workTime;
                 this.alertText = `You worked for ${
@@ -97,12 +83,12 @@ export default class Pomodoro {
             this.timerStartedTime = new Date();
 
             if (!this.textOnly) {
-                this.dispatcher = this.connection.play('./sounds/time-over.ogg', {
+                this.dispatcher = this.connection!.play('./sounds/time-over.ogg', {
                     volume: this.volume,
                 });
 
                 this.dispatcher.on('finish', () => {
-                    this.dispatcher = this.connection.play(
+                    this.dispatcher = this.connection!.play(
                         './sounds/silence-fixer.ogg'
                     );
                 });
@@ -118,9 +104,9 @@ export default class Pomodoro {
 
                 //Send DM Alerts
                 if (this.peopleToDm.length > 0) {
-                    this.peopleToDm.forEach((person) => {
+                    this.peopleToDm.forEach((user) => {
                         try {
-                            client.users.get(person).send(this.alertText);
+                            this.client.users.fetch(user).then(u => u.send(this.alertText));
                         } catch (err) {
                             console.log(err);
                         }
@@ -138,11 +124,11 @@ export default class Pomodoro {
     stopTimer() {
         clearTimeout(this.timer);
         if (!this.textOnly) {
-            this.dispatcher.destroy();
+            this.dispatcher!.destroy();
         }
     }
 
-    addToDM(id, message) {
+    addToDM(id: string, message: Discord.Message) {
         if (this.peopleToDm.filter((person) => person == id).length == 0) {
             this.peopleToDm.push(id);
             message.reply('you will now receive the alerts via Direct Message!');
@@ -152,7 +138,7 @@ export default class Pomodoro {
         }
     }
 
-    toggleNotifications(message) {
+    toggleNotifications(message: Discord.Message) {
         this.textAlerts = !this.textAlerts;
 
         if (this.textAlerts) {
@@ -162,7 +148,7 @@ export default class Pomodoro {
         }
     }
 
-    changeVolume(volume) {
+    changeVolume(volume: number) {
         this.volume = volume;
     }
 }

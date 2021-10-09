@@ -1,7 +1,8 @@
 require('dotenv').config();
 import Discord from 'discord.js';
 import Pomodoro from './pomodoro';
-import Constants from './constants';
+import { HELP_MESSAGE_EMBED } from './constants';
+import Container from './container';
 
 const client = new Discord.Client();
 
@@ -13,7 +14,7 @@ if (process.env.SH_TOKEN == '' || process.env.SH_TOKEN == undefined) {
 
 client.on('ready', () => {
     console.log('Pomodoro bot started');
-    client.user.setActivity('Type pd!help');
+    client.user!.setActivity('Type pd!help');
 });
 
 const COMMANDS = [
@@ -27,26 +28,9 @@ const COMMANDS = [
     'pd!help',
 ];
 
-
-class Container {
-    pomodoros: Pomodoro[];
-
-    constructor() {
-        this.pomodoros = [];
-    }
-
-    addPomodoro(pomodoro: Pomodoro) {
-        this.pomodoros.push(pomodoro);
-    }
-
-    removePomodoro(id: string) {
-        this.pomodoros = this.pomodoros.filter((pomodoro) => pomodoro.id != id);
-    }
-}
-
 let container = new Container();
 
-function checkParams(arg1, arg2, arg3, message) {
+function checkParams(arg1: string, arg2: string, arg3: string, message: Discord.Message) {
     let checked = true;
 
     if (arg1) {
@@ -93,7 +77,7 @@ client.on('message', async (message) => {
 
         //Check if there's already a pomodoro running on the server
         let pomodoro = container.pomodoros.filter(
-            (pomodoro) => pomodoro.id == message.guild.id
+            (pomodoro) => pomodoro.id == message.guild!.id
         );
 
         if (pomodoro.length > 0) {
@@ -106,6 +90,7 @@ client.on('message', async (message) => {
             if (args[1] && args[2] && args[3]) {
                 container.addPomodoro(
                     new Pomodoro(
+                        client,
                         parseInt(args[1]) * 60000,
                         parseInt(args[2]) * 60000,
                         parseInt(args[3]) * 60000,
@@ -118,6 +103,7 @@ client.on('message', async (message) => {
             } else {
                 container.addPomodoro(
                     new Pomodoro(
+                        client,
                         1500000,
                         300000,
                         900000,
@@ -145,9 +131,9 @@ client.on('message', async (message) => {
             return;
         }
 
-        if (message.member.voice) {
+        if (message.member?.voice) {
             let pomodoro = container.pomodoros.filter(
-                (pomodoro) => pomodoro.id == message.guild.id
+                (pomodoro) => pomodoro.id == message.guild!.id
             );
 
             if (pomodoro.length > 0) {
@@ -159,10 +145,11 @@ client.on('message', async (message) => {
                 if (args[1] && args[2] && args[3]) {
                     container.addPomodoro(
                         new Pomodoro(
+                            client,
                             parseInt(args[1]) * 60000,
                             parseInt(args[2]) * 60000,
                             parseInt(args[3]) * 60000,
-                            await message.member.voice.channel.join(),
+                            await message.member!.voice.channel!.join(),
                             message.guild.id,
                             message,
                             false
@@ -171,10 +158,11 @@ client.on('message', async (message) => {
                 } else {
                     container.addPomodoro(
                         new Pomodoro(
+                            client,
                             1500000,
                             300000,
                             900000,
-                            await message.member.voice.channel.join(),
+                            await message.member!.voice.channel!.join(),
                             message.guild.id,
                             message,
                             false
@@ -200,7 +188,7 @@ client.on('message', async (message) => {
     //Stop the pomodoro
     if (args[0] == COMMANDS[2]) {
         let pomodoroStop = container.pomodoros.filter(
-            (pomodoro) => pomodoro.id == message.guild.id
+            (pomodoro) => pomodoro.id == message.guild!.id
         );
 
         if (pomodoroStop.length == 0) {
@@ -209,7 +197,7 @@ client.on('message', async (message) => {
         }
 
         if (!pomodoroStop[0].textOnly) {
-            if (!message.member.voice.channel) {
+            if (!message.member!.voice.channel) {
                 message.reply('You are not in a voice channel!');
                 return;
             }
@@ -221,13 +209,13 @@ client.on('message', async (message) => {
         message.channel.send('Nice work! Glad I could help!');
 
         if (!pomodoroStop[0].textOnly) {
-            message.member.voice.channel.leave();
+            message.member!.voice.channel!.leave();
         }
     }
 
     if (args[0] == COMMANDS[3]) {
         let pomodoro = container.pomodoros.filter(
-            (pomodoro) => pomodoro.id == message.guild.id
+            (pomodoro) => pomodoro.id == message.guild!.id
         );
 
         if (pomodoro.length == 0) {
@@ -254,12 +242,12 @@ client.on('message', async (message) => {
     }
 
     if (args[0] == COMMANDS[7]) {
-        message.author.send(Constants.HELP_MESSAGE_EMBED);
+        message.author.send(HELP_MESSAGE_EMBED);
     }
 
     if (args[0] == COMMANDS[4]) {
         let pomodoro = container.pomodoros.filter(
-            (pomodoro) => pomodoro.id == message.guild.id
+            (pomodoro) => pomodoro.id == message.guild!.id
         );
 
         if (pomodoro.length == 0) {
@@ -268,7 +256,7 @@ client.on('message', async (message) => {
         }
 
         if (!pomodoro[0].textOnly) {
-            if (!message.member.voice.channel) {
+            if (!message.member!.voice.channel) {
                 message.reply('You are not in a voice channel!');
                 return;
             }
@@ -279,7 +267,7 @@ client.on('message', async (message) => {
 
     if (args[0] == COMMANDS[5]) {
         let pomodoro = container.pomodoros.filter(
-            (pomodoro) => pomodoro.id == message.guild.id
+            (pomodoro) => pomodoro.id == message.guild!.id
         );
 
         if (pomodoro.length == 0) {
@@ -296,7 +284,7 @@ client.on('message', async (message) => {
             return;
         }
 
-        if (!message.member.voice.channel) {
+        if (!message.member!.voice.channel) {
             message.reply('You are not in a voice channel!');
             return;
         }
@@ -304,7 +292,7 @@ client.on('message', async (message) => {
 
     if (args[0] == COMMANDS[6]) {
         let pomodoro = container.pomodoros.filter(
-            (pomodoro) => pomodoro.id == message.guild.id
+            (pomodoro) => pomodoro.id == message.guild!.id
         );
 
         if (pomodoro[0].textOnly) {
@@ -317,7 +305,7 @@ client.on('message', async (message) => {
             return;
         }
 
-        if (!message.member.voice.channel) {
+        if (!message.member!.voice.channel) {
             message.reply('You are not in a voice channel!');
             return;
         }
