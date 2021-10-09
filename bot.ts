@@ -1,7 +1,7 @@
 require('dotenv').config();
-const Discord = require('discord.js');
-const Pomodoro = require('./pomodoro');
-const Constants = require('./constants');
+import Discord from 'discord.js';
+import Pomodoro from './pomodoro';
+import Constants from './constants';
 
 const client = new Discord.Client();
 
@@ -12,7 +12,7 @@ if (process.env.SH_TOKEN == '' || process.env.SH_TOKEN == undefined) {
 }
 
 client.on('ready', () => {
-    console.log('❤');
+    console.log('Pomodoro bot started');
     client.user.setActivity('Type pd!help');
 });
 
@@ -25,21 +25,21 @@ const COMMANDS = [
     'pd!togtext',
     'pd!volume',
     'pd!help',
-    'pd!clear',
 ];
 
 
 class Container {
+    pomodoros: Pomodoro[];
+
     constructor() {
         this.pomodoros = [];
     }
 
-    addPomodoro(pomodoro) {
+    addPomodoro(pomodoro: Pomodoro) {
         this.pomodoros.push(pomodoro);
-        console.log('added pomodoro');
     }
 
-    removePomodoro(id) {
+    removePomodoro(id: string) {
         this.pomodoros = this.pomodoros.filter((pomodoro) => pomodoro.id != id);
     }
 }
@@ -106,9 +106,9 @@ client.on('message', async (message) => {
             if (args[1] && args[2] && args[3]) {
                 container.addPomodoro(
                     new Pomodoro(
-                        parseInt(args[1] * 60000),
-                        parseInt(args[2] * 60000),
-                        parseInt(args[3] * 60000),
+                        parseInt(args[1]) * 60000,
+                        parseInt(args[2]) * 60000,
+                        parseInt(args[3]) * 60000,
                         null,
                         message.guild.id,
                         message,
@@ -159,9 +159,9 @@ client.on('message', async (message) => {
                 if (args[1] && args[2] && args[3]) {
                     container.addPomodoro(
                         new Pomodoro(
-                            parseInt(args[1] * 60000),
-                            parseInt(args[2] * 60000),
-                            parseInt(args[3] * 60000),
+                            parseInt(args[1]) * 60000,
+                            parseInt(args[2]) * 60000,
+                            parseInt(args[3]) * 60000,
                             await message.member.voice.channel.join(),
                             message.guild.id,
                             message,
@@ -240,15 +240,15 @@ client.on('message', async (message) => {
         let timeLeft;
 
         if (pomodoro[0].time % 2 != 0) {
-            timeLeft = parseInt((pomodoro[0].workTime - timePassed) / 60000);
+            timeLeft = (pomodoro[0].workTime - timePassed) / 60000;
             message.channel.send(
                 `${timeLeft + 1}min left to your break! Keep it up!`
             );
         } else if (pomodoro[0].time % 2 == 0 && pomodoro[0].time != 8) {
-            timeLeft = parseInt((pomodoro[0].smallBreak - timePassed) / 60000);
+            timeLeft = (pomodoro[0].smallBreak - timePassed) / 60000;
             message.channel.send(`${timeLeft + 1}min left to start working!`);
         } else {
-            timeLeft = parseInt((pomodoro[0].bigBreak - timePassed) / 60000);
+            timeLeft = (pomodoro[0].bigBreak - timePassed) / 60000;
             message.channel.send(`${timeLeft + 1}min left to start working!`);
         }
     }
@@ -325,11 +325,11 @@ client.on('message', async (message) => {
         if (args[1]) {
             if (
                 parseInt(args[1]) < 1 ||
-                parseInt(args[1] > 100 || isNaN(parseInt(args[1])))
+                parseInt(args[1]) > 100 || isNaN(parseInt(args[1]))
             ) {
                 message.channel.send('Please insert a valid number between 0 and 100');
             } else {
-                pomodoro[0].changeVolume(args[1] / 100);
+                pomodoro[0].changeVolume(parseInt(args[1]) / 100);
                 message.channel.send(`The volume has been set to ${args[1]}`);
             }
         } else {
@@ -339,49 +339,4 @@ client.on('message', async (message) => {
         }
     }
 
-    if (args[0] == COMMANDS[8]) {
-        let messagesProcessed = 0;
-        let allDeleted = true;
-        message.channel
-            .fetchMessages({ limit: 30 })
-            .then((messages) => {
-                messages.forEach((message) => {
-                    let messageContent = message.content.trim().split(' ');
-                    if (
-                        COMMANDS.includes(messageContent[0]) ||
-                        message.author.id == client.user.id
-                    ) {
-                        message
-                            .delete()
-                            .then(() => {
-                                messagesProcessed++;
-                                if (messagesProcessed == 29) {
-                                    if (!allDeleted) {
-                                        message.channel.send(
-                                            'There was a problem deleting some of the messages! Please check my permissions!'
-                                        );
-                                    }
-                                }
-                            })
-                            .catch(() => {
-                                messagesProcessed++;
-                                allDeleted = false;
-
-                                if (messagesProcessed == 29) {
-                                    if (!allDeleted) {
-                                        message.channel.send(
-                                            'There was a problem deleting some of the messages! Please check my permissions!'
-                                        );
-                                    }
-                                }
-                            });
-                    }
-                });
-            })
-            .catch(() => {
-                message.channel.send(
-                    'There was a problem deleting the messages! Please check my permissions!'
-                );
-            });
-    }
 });

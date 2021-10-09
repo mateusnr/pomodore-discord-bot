@@ -1,6 +1,6 @@
 import Discord from "discord.js";
 
-export class Pomodoro {
+export default class Pomodoro {
     workTime: number;
     smallBreak: number;
     bigBreak: number;
