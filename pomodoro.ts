@@ -7,7 +7,7 @@ export default class Pomodoro {
     smallBreak: number;
     bigBreak: number;
     interval?: number;
-    connection?: Discord.VoiceConnection;
+    connection?: Discord.VoiceConnection | null;
     id: string;
     message: Discord.Message;
     textOnly: boolean;
@@ -29,7 +29,7 @@ export default class Pomodoro {
         workTime: number,
         smallBreak: number,
         bigBreak: number,
-        connection: Discord.VoiceConnection,
+        connection: Discord.VoiceConnection | null,
         id: string,
         message: Discord.Message,
         textOnly: boolean
@@ -48,10 +48,6 @@ export default class Pomodoro {
         this.timerStartedTime = new Date();
         this.alertText = '';
         this.textOnly = textOnly;
-
-        // if (!textOnly) {
-        //   this.connection.voice.setSelfDeaf(true);
-        // }
 
         this.startANewCycle();
     }
