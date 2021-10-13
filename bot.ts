@@ -1,9 +1,10 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
 import Discord from 'discord.js';
 import Pomodoro from './pomodoro';
 import { HELP_MESSAGE_EMBED } from './constants';
 import Container from './container';
 
+dotenv.config();
 const client = new Discord.Client();
 
 if (process.env.SH_TOKEN == '' || process.env.SH_TOKEN == undefined) {
@@ -228,7 +229,7 @@ client.on('message', async (message) => {
         let timeLeft;
 
         if (pomodoro[0].time % 2 != 0) {
-            timeLeft = (pomodoro[0].workTime - timePassed) / 60000;
+            timeLeft = Math.floor((pomodoro[0].workTime - timePassed) / 60000);
             message.channel.send(
                 `${timeLeft + 1}min left to your break! Keep it up!`
             );

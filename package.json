@@ -1,20 +1,17 @@
 {
   "name": "pomodore",
   "version": "1.0.0",
-  "engines": {
-    "node": "14.15.1"
-  },
   "description": "A pomodoro discord bot",
   "main": "bot.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "tsc && node dist/bot.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@discordjs/opus": "^0.6.0",
     "discord.js": "^12.5.3",
-    "dotenv": "^8.2.0",
+    "dotenv": "^10.0.0",
     "ffmpeg-static": "^4.4.0"
   }
 }
