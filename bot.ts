@@ -126,7 +126,7 @@ client.on('message', async (message) => {
         message.channel.send("Pomodoro started! Let's get to work!");
     }
 
-    if (args[0] === COMMANDS[0]) {
+    else if (args[0] === COMMANDS[0]) {
         //Check arguments
         if (!checkParams(args[1], args[2], args[3], message)) {
             return;
@@ -187,7 +187,7 @@ client.on('message', async (message) => {
     }
 
     //Stop the pomodoro
-    if (args[0] == COMMANDS[2]) {
+    else if (args[0] == COMMANDS[2]) {
         let pomodoroStop = container.pomodoros.filter(
             (pomodoro) => pomodoro.id == message.guild!.id
         );
@@ -214,7 +214,7 @@ client.on('message', async (message) => {
         }
     }
 
-    if (args[0] == COMMANDS[3]) {
+    else if (args[0] == COMMANDS[3]) {
         let pomodoro = container.pomodoros.filter(
             (pomodoro) => pomodoro.id == message.guild!.id
         );
@@ -234,19 +234,19 @@ client.on('message', async (message) => {
                 `${timeLeft + 1}min left to your break! Keep it up!`
             );
         } else if (pomodoro[0].time % 2 == 0 && pomodoro[0].time != 8) {
-            timeLeft = (pomodoro[0].smallBreak - timePassed) / 60000;
+            timeLeft = Math.floor((pomodoro[0].smallBreak - timePassed) / 60000);
             message.channel.send(`${timeLeft + 1}min left to start working!`);
         } else {
-            timeLeft = (pomodoro[0].bigBreak - timePassed) / 60000;
+            timeLeft = Math.floor((pomodoro[0].bigBreak - timePassed) / 60000);
             message.channel.send(`${timeLeft + 1}min left to start working!`);
         }
     }
 
-    if (args[0] == COMMANDS[7]) {
-        message.author.send(HELP_MESSAGE_EMBED);
+    else if (args[0] == COMMANDS[7]) {
+        message.channel.send(HELP_MESSAGE_EMBED);
     }
 
-    if (args[0] == COMMANDS[4]) {
+    else if (args[0] == COMMANDS[4]) {
         let pomodoro = container.pomodoros.filter(
             (pomodoro) => pomodoro.id == message.guild!.id
         );
@@ -266,7 +266,7 @@ client.on('message', async (message) => {
         pomodoro[0].addToDM(message.author.id, message);
     }
 
-    if (args[0] == COMMANDS[5]) {
+    else if (args[0] == COMMANDS[5]) {
         let pomodoro = container.pomodoros.filter(
             (pomodoro) => pomodoro.id == message.guild!.id
         );
@@ -291,7 +291,7 @@ client.on('message', async (message) => {
         }
     }
 
-    if (args[0] == COMMANDS[6]) {
+    else if (args[0] == COMMANDS[6]) {
         let pomodoro = container.pomodoros.filter(
             (pomodoro) => pomodoro.id == message.guild!.id
         );
