@@ -8,7 +8,7 @@ export default class Pomodoro {
     bigBreak: number;
     interval?: number;
     connection?: Discord.VoiceConnection | null;
-    id: string;
+    guild: Discord.Guild;
     message: Discord.Message;
     textOnly: boolean;
 
@@ -30,12 +30,12 @@ export default class Pomodoro {
         smallBreak: number,
         bigBreak: number,
         connection: Discord.VoiceConnection | null,
-        id: string,
+        guild: Discord.Guild,
         message: Discord.Message,
         textOnly: boolean
     ) {
         this.client = client;
-        this.id = id;
+        this.guild = guild;
         this.workTime = workTime;
         this.smallBreak = smallBreak;
         this.bigBreak = bigBreak;

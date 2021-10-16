@@ -12,6 +12,6 @@ export default class Container {
     }
 
     removePomodoro(id: string) {
-        this.pomodoros = this.pomodoros.filter((pomodoro) => pomodoro.id != id);
+        this.pomodoros = this.pomodoros.filter((pomodoro) => pomodoro.guild.id != id);
     }
 }
