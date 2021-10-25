@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import Discord from 'discord.js';
 import Pomodoro from './pomodoro';
 import { HELP_MESSAGE_EMBED } from './constants';
-import Container from './container';
+import PomodoroContainer from './container';
 
 dotenv.config();
 const client = new Discord.Client();
@@ -29,7 +29,7 @@ const COMMANDS = [
     'pd!help',
 ];
 
-let container = new Container();
+let container = new PomodoroContainer();
 
 function checkParams(arg1: string, arg2: string, arg3: string, message: Discord.Message) {
     let checked = true;
@@ -60,7 +60,7 @@ function checkParams(arg1: string, arg2: string, arg3: string, message: Discord.
 
 setInterval(() => {
     container.pomodoros.forEach((pomodoro) => {
-        console.log(`Server: ${pomodoro.guild.name} (${pomodoro.guild.id}): ${pomodoro.time}m: ${pomodoro.textOnly ? 'text' : 'voice'}`);
+        console.log(`Server: ${pomodoro.guild.name} (${pomodoro.guild.id}), Iteration: ${pomodoro.time} Type: ${pomodoro.textOnly ? 'text' : 'voice'}`);
     });
 }, 600000);
 

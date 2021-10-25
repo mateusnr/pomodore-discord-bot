@@ -1,6 +1,6 @@
 import Pomodoro from "./pomodoro";
 
-export default class Container {
+export default class PomodoroContainer {
     pomodoros: Pomodoro[];
 
     constructor() {
