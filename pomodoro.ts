@@ -1,3 +1,4 @@
+import { AudioPlayer, AudioPlayerState, AudioPlayerStatus, AudioResource, createAudioPlayer, createAudioResource, joinVoiceChannel, VoiceConnection } from "@discordjs/voice";
 import Discord from "discord.js";
 
 export default class Pomodoro {
@@ -7,13 +8,13 @@ export default class Pomodoro {
     smallBreak: number;
     bigBreak: number;
     interval?: number;
-    connection?: Discord.VoiceConnection | null;
+    connection?: VoiceConnection;
     guild: Discord.Guild;
     message: Discord.Message;
     textOnly: boolean;
 
     time: number;
-    dispatcher?: Discord.StreamDispatcher;
+    resource?: AudioResource;
     textAlerts: boolean;
     volume: number;
 
@@ -23,13 +24,13 @@ export default class Pomodoro {
     alertText: string; 
 
     timer?: number;
+    player?: AudioPlayer;
 
     constructor(
         client: Discord.Client,
         workTime: number,
         smallBreak: number,
         bigBreak: number,
-        connection: Discord.VoiceConnection | null,
         guild: Discord.Guild,
         message: Discord.Message,
         textOnly: boolean
@@ -42,14 +43,32 @@ export default class Pomodoro {
         this.peopleToDm = [];
         this.textAlerts = true;
         this.volume = 0.5;
-        this.connection = connection;
         this.message = message;
         this.time = 1;
         this.timerStartedTime = new Date();
         this.alertText = '';
         this.textOnly = textOnly;
 
+        if (!this.textOnly) {
+            const channel = this.message.member!.voice.channel;
+            if (channel != null && channel.type === "GUILD_VOICE") {
+                this.connection = this.enterVoiceChannel(channel);
+            }
+            this.player = createAudioPlayer();
+            this.connection?.subscribe(this.player!);
+        }
+
         this.startANewCycle();
+    }
+
+    enterVoiceChannel(voiceChannel: Discord.VoiceChannel) {
+        const connection = joinVoiceChannel({
+            channelId: voiceChannel.id,
+            guildId: voiceChannel.guildId,
+            adapterCreator: voiceChannel.guild.voiceAdapterCreator
+        });
+
+        return connection;
     }
 
     startANewCycle() {
@@ -79,14 +98,15 @@ export default class Pomodoro {
             this.timerStartedTime = new Date();
 
             if (!this.textOnly) {
-                this.dispatcher = this.connection!.play('./sounds/time-over.ogg', {
-                    volume: this.volume,
-                });
+                // TODO: enable volume 
+                this.resource = createAudioResource('sounds/time-over.ogg');
+                this.player!.play(this.resource);
 
-                this.dispatcher.on('finish', () => {
-                    this.dispatcher = this.connection!.play(
+                this.player!.on(AudioPlayerStatus.Idle, (state) => {
+                    this.resource = createAudioResource(
                         './sounds/silence-fixer.ogg'
                     );
+                    this.player!.play(this.resource);
                 });
             }
 
@@ -120,7 +140,7 @@ export default class Pomodoro {
     stopTimer() {
         clearTimeout(this.timer);
         if (!this.textOnly) {
-            this.dispatcher!.destroy();
+            this.player!.stop();
         }
     }
 

@@ -1,11 +1,17 @@
 import dotenv from 'dotenv';
-import Discord from 'discord.js';
+import Discord, { Intents } from 'discord.js';
 import Pomodoro from './pomodoro';
 import { HELP_MESSAGE_EMBED } from './constants';
 import PomodoroContainer from './container';
 
 dotenv.config();
-const client = new Discord.Client();
+const client = new Discord.Client({
+    intents: [
+        Intents.FLAGS.GUILDS, 
+        Intents.FLAGS.DIRECT_MESSAGES, 
+        Intents.FLAGS.GUILD_MESSAGES,
+        Intents.FLAGS.GUILD_VOICE_STATES]
+});
 
 if (process.env.SH_TOKEN == '' || process.env.SH_TOKEN == undefined) {
     client.login(process.env.DJS_TOKEN);
@@ -64,7 +70,7 @@ setInterval(() => {
     });
 }, 600000);
 
-client.on('message', async (message) => {
+client.on('messageCreate', async (message) => {
     if (!message.guild) return;
 
     const args = message.content.trim().split(' ');
@@ -94,7 +100,6 @@ client.on('message', async (message) => {
                         parseInt(args[1]) * 60000,
                         parseInt(args[2]) * 60000,
                         parseInt(args[3]) * 60000,
-                        null,
                         message.guild,
                         message,
                         true
@@ -107,7 +112,6 @@ client.on('message', async (message) => {
                         1500000,
                         300000,
                         900000,
-                        null,
                         message.guild,
                         message,
                         true
@@ -149,7 +153,6 @@ client.on('message', async (message) => {
                             parseInt(args[1]) * 60000,
                             parseInt(args[2]) * 60000,
                             parseInt(args[3]) * 60000,
-                            await message.member!.voice.channel!.join(),
                             message.guild,
                             message,
                             false
@@ -162,7 +165,6 @@ client.on('message', async (message) => {
                             1500000,
                             300000,
                             900000,
-                            await message.member!.voice.channel!.join(),
                             message.guild,
                             message,
                             false
@@ -209,7 +211,7 @@ client.on('message', async (message) => {
         message.channel.send('Nice work! Glad I could help!');
 
         if (!pomodoroStop[0].textOnly) {
-            message.member!.voice.channel!.leave();
+            pomodoroStop[0].connection!.destroy();
         }
     }
 
@@ -242,7 +244,7 @@ client.on('message', async (message) => {
     }
 
     else if (args[0] == COMMANDS[7]) {
-        message.channel.send(HELP_MESSAGE_EMBED);
+        message.channel.send({ embeds: [HELP_MESSAGE_EMBED]});
     }
 
     else if (args[0] == COMMANDS[4]) {
