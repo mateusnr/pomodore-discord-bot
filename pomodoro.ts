@@ -1,4 +1,4 @@
-import { AudioPlayer, AudioPlayerState, AudioPlayerStatus, AudioResource, createAudioPlayer, createAudioResource, joinVoiceChannel, VoiceConnection } from "@discordjs/voice";
+import { AudioPlayer, AudioPlayerStatus, createAudioPlayer, createAudioResource, joinVoiceChannel, StreamType, VoiceConnection } from "@discordjs/voice";
 import Discord from "discord.js";
 
 export default class Pomodoro {
@@ -14,7 +14,6 @@ export default class Pomodoro {
     textOnly: boolean;
 
     time: number;
-    resource?: AudioResource;
     textAlerts: boolean;
     volume: number;
 
@@ -98,15 +97,15 @@ export default class Pomodoro {
             this.timerStartedTime = new Date();
 
             if (!this.textOnly) {
-                // TODO: enable volume 
-                this.resource = createAudioResource('sounds/time-over.ogg');
-                this.player!.play(this.resource);
+                const intervalResource = createAudioResource('sounds/time-over.ogg', { inputType: StreamType.OggOpus });
+                const silenceFixerResource = createAudioResource('./sounds/silence-fixer.ogg', {
+                    inputType: StreamType.OggOpus 
+                });
+
+                this.player!.play(intervalResource);
 
                 this.player!.on(AudioPlayerStatus.Idle, (state) => {
-                    this.resource = createAudioResource(
-                        './sounds/silence-fixer.ogg'
-                    );
-                    this.player!.play(this.resource);
+                    this.player!.play(silenceFixerResource);
                 });
             }
 
