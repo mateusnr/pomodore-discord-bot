@@ -86,7 +86,7 @@ client.on('messageCreate', async (message) => {
         );
 
         if (pomodoro.length > 0) {
-            message.reply("There's already a pomodoro running!");
+            message.channel.send("There's already a pomodoro running!");
             return;
         }
 
@@ -140,7 +140,7 @@ client.on('messageCreate', async (message) => {
             );
 
             if (pomodoro.length > 0) {
-                message.reply("There's already a pomodoro running!");
+                message.channel.send("There's already a pomodoro running!");
                 return;
             }
 
@@ -193,13 +193,13 @@ client.on('messageCreate', async (message) => {
         );
 
         if (pomodoroStop.length == 0) {
-            message.reply("There's no pomodoro currently running!");
+            message.channel.send("There's no pomodoro currently running!");
             return;
         }
 
         if (!pomodoroStop[0].textOnly) {
             if (!message.member!.voice.channel) {
-                message.reply('You are not in a voice channel!');
+                message.channel.send('You are not in a voice channel!');
                 return;
             }
         }
@@ -220,7 +220,7 @@ client.on('messageCreate', async (message) => {
         );
 
         if (pomodoro.length == 0) {
-            message.reply("There's no pomodoro currently running!");
+            message.channel.send("There's no pomodoro currently running!");
             return;
         }
 
@@ -252,13 +252,13 @@ client.on('messageCreate', async (message) => {
         );
 
         if (pomodoro.length == 0) {
-            message.reply("There's no pomodoro currently running!");
+            message.channel.send("There's no pomodoro currently running!");
             return;
         }
 
         if (!pomodoro[0].textOnly) {
             if (!message.member!.voice.channel) {
-                message.reply('You are not in a voice channel!');
+                message.channel.send('You are not in a voice channel!');
                 return;
             }
         }
@@ -272,7 +272,7 @@ client.on('messageCreate', async (message) => {
         );
 
         if (pomodoro.length == 0) {
-            message.reply("There's no pomodoro currently running!");
+            message.channel.send("There's no pomodoro currently running!");
             return;
         }
 
@@ -286,7 +286,7 @@ client.on('messageCreate', async (message) => {
         }
 
         if (!message.member!.voice.channel) {
-            message.reply('You are not in a voice channel!');
+            message.channel.send('You are not in a voice channel!');
             return;
         }
     }
