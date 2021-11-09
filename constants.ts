@@ -47,11 +47,6 @@ export const HELP_MESSAGE_EMBED = new Discord.MessageEmbed()
                 inline: true
             },
             {
-                name: 'Change the volume of the alerts, defaults to 50',
-                value: 'pd!volume volume',
-                inline: true
-            },
-            {
                 name: 'Get the list of commands',
                 value: 'pd!help',
                 inline: true

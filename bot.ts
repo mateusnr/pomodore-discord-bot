@@ -31,7 +31,6 @@ const COMMANDS = [
     'pd!status',
     'pd!dm',
     'pd!togtext',
-    'pd!volume',
     'pd!help',
 ];
 
@@ -291,42 +290,4 @@ client.on('messageCreate', async (message) => {
             return;
         }
     }
-
-    else if (args[0] == COMMANDS[6]) {
-        let pomodoro = container.pomodoros.filter(
-            (pomodoro) => pomodoro.guild.id == message.guild!.id
-        );
-
-        if (pomodoro[0].textOnly) {
-            message.reply("You can't change the volume of a text-only pomodoro!");
-            return;
-        }
-
-        if (pomodoro.length == 0) {
-            message.reply("There's no pomodoro currently running!");
-            return;
-        }
-
-        if (!message.member!.voice.channel) {
-            message.reply('You are not in a voice channel!');
-            return;
-        }
-
-        if (args[1]) {
-            if (
-                parseInt(args[1]) < 1 ||
-                parseInt(args[1]) > 100 || isNaN(parseInt(args[1]))
-            ) {
-                message.channel.send('Please insert a valid number between 0 and 100');
-            } else {
-                pomodoro[0].changeVolume(parseInt(args[1]) / 100);
-                message.channel.send(`The volume has been set to ${args[1]}`);
-            }
-        } else {
-            message.channel.send(
-                'Please type a second argument with a number between 0 and 100'
-            );
-        }
-    }
-
 });
