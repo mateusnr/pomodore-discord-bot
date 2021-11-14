@@ -98,13 +98,13 @@ export default class Pomodoro {
 
             if (!this.textOnly) {
                 const intervalResource = createAudioResource('sounds/time-over.ogg', { inputType: StreamType.OggOpus });
-                const silenceFixerResource = createAudioResource('./sounds/silence-fixer.ogg', {
-                    inputType: StreamType.OggOpus 
-                });
-
                 this.player!.play(intervalResource);
 
                 this.player!.on(AudioPlayerStatus.Idle, (state) => {
+					const silenceFixerResource = createAudioResource('./sounds/silence-fixer.ogg', {
+						inputType: StreamType.OggOpus 
+					});
+
                     this.player!.play(silenceFixerResource);
                 });
             }
