@@ -242,8 +242,8 @@ client.on('messageCreate', async (message) => {
         }
     }
 
-    else if (args[0] == COMMANDS[7]) {
-        message.channel.send({ embeds: [HELP_MESSAGE_EMBED]});
+    else if (args[0] == COMMANDS[6]) {
+        message.channel.send({ embeds: [HELP_MESSAGE_EMBED] });
     }
 
     else if (args[0] == COMMANDS[4]) {
