@@ -134,7 +134,7 @@ client.on('messageCreate', async (message) => {
             return;
         }
 
-        if (message.member?.voice) {
+        if (message.member?.voice.channel) {
             let pomodoro = container.pomodoros.filter(
                 (pomodoro) => pomodoro.guild.id == message.guild!.id
             );
