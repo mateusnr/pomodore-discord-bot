@@ -1,9 +1,19 @@
 import Pomodoro from "./pomodoro";
 
 export default class PomodoroContainer {
+    private static instance: PomodoroContainer;
+
     pomodoros: Pomodoro[];
 
-    constructor() {
+    public static getInstance() {
+        if (!PomodoroContainer.instance) {
+            PomodoroContainer.instance = new PomodoroContainer();
+        }
+
+        return PomodoroContainer.instance;
+    }
+
+    private constructor() {
         this.pomodoros = [];
     }
 

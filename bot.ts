@@ -3,9 +3,11 @@ import Discord, { Intents } from 'discord.js';
 import Pomodoro from './pomodoro';
 import { HELP_MESSAGE_EMBED } from './constants';
 import PomodoroContainer from './container';
+import { SapphireClient } from '@sapphire/framework';
 
 dotenv.config();
-const client = new Discord.Client({
+const client = new SapphireClient({
+    defaultPrefix: '?',
     intents: [
         Intents.FLAGS.GUILDS, 
         Intents.FLAGS.DIRECT_MESSAGES, 
@@ -34,7 +36,7 @@ const COMMANDS = [
     'pd!help',
 ];
 
-let container = new PomodoroContainer();
+let container = PomodoroContainer.getInstance();
 
 function checkParams(arg1: string, arg2: string, arg3: string, message: Discord.Message) {
     let checked = true;
