@@ -22,7 +22,7 @@ export default class Pomodoro {
     timerStartedTime: Date; 
     alertText: string; 
 
-    timer?: number;
+    timer?: NodeJS.Timeout;
     player?: AudioPlayer;
 
     constructor(
@@ -137,7 +137,7 @@ export default class Pomodoro {
     }
 
     stopTimer() {
-        clearTimeout(this.timer);
+        clearTimeout(this.timer!);
         if (!this.textOnly) {
             this.player!.stop();
         }
