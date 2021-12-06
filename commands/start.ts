@@ -1,5 +1,5 @@
 import { ApplyOptions } from "@sapphire/decorators";
-import { Args, Command, CommandOptions } from "@sapphire/framework";
+import { Args, ArgType, Command, CommandOptions, UserError } from "@sapphire/framework";
 import type { Message } from "discord.js";
 import PomodoroContainer from "../container";
 import Pomodoro from "../pomodoro";
@@ -10,11 +10,20 @@ import Pomodoro from "../pomodoro";
 
 })
 export class PomodoroStartCommand extends Command {
+    private async handleArgs<T extends ArgType[keyof ArgType]>(argPicker: Promise<T>, defaultValue: number) {
+        return argPicker.catch((error) => {
+            if (error.identifier === 'numberTooLarge' || error.identifier === 'numberTooSmall') {
+                throw new UserError({identifier: 'OutOfBoundsInterval', message: 'Please insert a number between 5 and 120', context: this.toJSON()});     
+            } else if (error.identifier === 'argsMissing') {
+                return defaultValue;
+            }
+        });
+    }
     public async messageRun(message: Message, args: Args) {
         const container = PomodoroContainer.getInstance();
-        const workTime = await args.pick('number').catch(() => 45);
-        const smallBreak = await args.pick('number').catch(() => 15);
-        const bigBreak = await args.pick('number').catch(() => 20);
+        const workTime = await this.handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 45);
+        const smallBreak = await this.handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 15);
+        const bigBreak = await this.handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 15);
 
         if (message.member?.voice.channel) {
             let pomodoro = container.pomodoros.filter(
@@ -30,9 +39,9 @@ export class PomodoroStartCommand extends Command {
                 container.addPomodoro(
                     new Pomodoro(
                         this.container.client,
-                        workTime * 60000,
-                        smallBreak * 60000,
-                        bigBreak * 60000,
+                        workTime! * 60000,
+                        smallBreak! * 60000,
+                        bigBreak! * 60000,
                         message.guild!,
                         message,
                         false
