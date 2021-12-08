@@ -8,6 +8,7 @@ import { SapphireClient } from '@sapphire/framework';
 dotenv.config();
 const client = new SapphireClient({
     defaultPrefix: '?',
+    loadDefaultErrorListeners: false,
     intents: [
         Intents.FLAGS.GUILDS, 
         Intents.FLAGS.DIRECT_MESSAGES, 
