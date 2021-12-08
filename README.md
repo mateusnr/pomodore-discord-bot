@@ -19,7 +19,6 @@ It enables:
 | pd!status                                                  | Check the current status of the pomodoro              |
 | pd!dm                                                      | Toggle the notifications via direct message           |
 | pd!togtext                                                 | Toggle the channel text notifications                 |
-| pd!volume volume                                           | Change the volume of the alerts, defaults to 50       |
 | pd!help                                                    | Get the list of commands                              |
 | pd!clear                                                   | Deletes the last 30 messages related to the bot       |
 
@@ -35,9 +34,3 @@ To self-host this bot follow these steps:
 - Run `npm install`
 - Invite your bot to your server
 - Run `node bot.js`
-
-### Roadmap
-
-- [ ] Add Task Management
-- [ ] Multiple Pomodoros in one server
-- [ ] Save personal pomodoro data
