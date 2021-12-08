@@ -3,6 +3,7 @@ import { Args, ArgType, Command, CommandOptions, UserError } from "@sapphire/fra
 import type { Message } from "discord.js";
 import PomodoroContainer from "../container";
 import Pomodoro from "../pomodoro";
+import { handleArgs } from "../utils";
 
 @ApplyOptions<CommandOptions>({
     name: 'start',
@@ -10,20 +11,11 @@ import Pomodoro from "../pomodoro";
 
 })
 export class PomodoroStartCommand extends Command {
-    private async handleArgs<T extends ArgType[keyof ArgType]>(argPicker: Promise<T>, defaultValue: number) {
-        return argPicker.catch((error) => {
-            if (error.identifier === 'numberTooLarge' || error.identifier === 'numberTooSmall') {
-                throw new UserError({identifier: 'OutOfBoundsInterval', message: 'Please insert a number between 5 and 120', context: this.toJSON()});     
-            } else if (error.identifier === 'argsMissing') {
-                return defaultValue;
-            }
-        });
-    }
     public async messageRun(message: Message, args: Args) {
         const container = PomodoroContainer.getInstance();
-        const workTime = await this.handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 45);
-        const smallBreak = await this.handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 15);
-        const bigBreak = await this.handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 15);
+        const workTime = await handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 45, this);
+        const smallBreak = await handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 15, this);
+        const bigBreak = await handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 15, this);
 
         if (message.member?.voice.channel) {
             let pomodoro = container.pomodoros.filter(
