@@ -1,5 +1,5 @@
 import { Command } from "@sapphire/framework";
-import { Message } from "discord.js";
+import type { Message } from "discord.js";
 import PomodoroContainer from "../container";
 
 export class PomodoroDMCommand extends Command {
