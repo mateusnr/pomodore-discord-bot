@@ -146,10 +146,10 @@ export default class Pomodoro {
     addToDM(id: string, message: Discord.Message) {
         if (this.peopleToDm.filter((person) => person == id).length == 0) {
             this.peopleToDm.push(id);
-            message.reply('you will now receive the alerts via Direct Message!');
+            message.reply('You will now receive the alerts via Direct Message!');
         } else {
             this.peopleToDm = this.peopleToDm.filter((person) => person != id);
-            message.reply('you will stop receiving the alerts via Direct Message!');
+            message.reply('You will stop receiving the alerts via Direct Message!');
         }
     }
 
