@@ -1,7 +1,5 @@
 import dotenv from 'dotenv';
-import Discord, { Intents } from 'discord.js';
-import Pomodoro from './pomodoro';
-import { HELP_MESSAGE_EMBED } from './constants';
+import { Intents } from 'discord.js';
 import PomodoroContainer from './container';
 import { SapphireClient } from '@sapphire/framework';
 
