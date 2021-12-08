@@ -6,7 +6,7 @@ import { SapphireClient } from '@sapphire/framework';
 dotenv.config();
 
 const client = new SapphireClient({
-    defaultPrefix: '?',
+    defaultPrefix: 'pd!',
     loadDefaultErrorListeners: false,
     intents: [
         Intents.FLAGS.GUILDS, 
