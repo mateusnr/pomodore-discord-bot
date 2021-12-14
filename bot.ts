@@ -31,6 +31,6 @@ let container = PomodoroContainer.getInstance();
 
 setInterval(() => {
     container.pomodoros.forEach((pomodoro) => {
-        console.log(`Server: ${pomodoro.guild.name} (${pomodoro.guild.id}), Iteration: ${pomodoro.time} Type: ${pomodoro.textOnly ? 'text' : 'voice'}`);
+        console.log(`Server: ${pomodoro.guild.name} (${pomodoro.guild.id}), Iteration: ${pomodoro.currentIteration} Type: ${pomodoro.textOnly ? 'text' : 'voice'}`);
     });
 }, 600000);

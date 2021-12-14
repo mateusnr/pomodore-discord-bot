@@ -5,15 +5,16 @@ export default class Pomodoro {
     client: Discord.Client;
 
     workTime: number;
-    smallBreak: number;
-    bigBreak: number;
-    interval?: number;
+    shortBreak: number;
+    longBreak: number;
+    currentInterval?: number;
+    currentIteration: number;
+    textOnly: boolean;
+
     connection?: VoiceConnection;
     guild: Discord.Guild;
     message: Discord.Message;
-    textOnly: boolean;
 
-    time: number;
     textAlerts: boolean;
     volume: number;
 
@@ -37,13 +38,13 @@ export default class Pomodoro {
         this.client = client;
         this.guild = guild;
         this.workTime = workTime;
-        this.smallBreak = smallBreak;
-        this.bigBreak = bigBreak;
+        this.shortBreak = smallBreak;
+        this.longBreak = bigBreak;
         this.peopleToDm = [];
         this.textAlerts = true;
         this.volume = 0.5;
         this.message = message;
-        this.time = 1;
+        this.currentIteration = 1;
         this.timerStartedTime = new Date();
         this.alertText = '';
         this.textOnly = textOnly;
@@ -72,25 +73,25 @@ export default class Pomodoro {
 
     startANewCycle() {
         try {
-            if (this.time % 2 != 0 && this.time != 7) {
-                this.interval = this.workTime;
+            if (this.currentIteration % 2 != 0 && this.currentIteration != 7) {
+                this.currentInterval = this.workTime;
                 this.alertText = `You worked for ${
                     this.workTime / 60000
-                }min! Time for a small break of ${this.smallBreak / 60000}min!`;
-            } else if (this.time == 7) {
-                this.interval = this.workTime;
+                }min! Time for a small break of ${this.shortBreak / 60000}min!`;
+            } else if (this.currentIteration == 7) {
+                this.currentInterval = this.workTime;
                 this.alertText = `You worked for ${
                     this.workTime / 60000
-                }min! Time for a big break of ${this.bigBreak / 60000}min!`;
-            } else if (this.time % 2 == 0 && this.time != 8) {
-                this.interval = this.smallBreak;
+                }min! Time for a big break of ${this.longBreak / 60000}min!`;
+            } else if (this.currentIteration % 2 == 0 && this.currentIteration != 8) {
+                this.currentInterval = this.shortBreak;
                 this.alertText = `You finished your ${
-                    this.smallBreak / 60000
+                    this.shortBreak / 60000
                 }min break! Let's get back to work!`;
-            } else if (this.time == 8) {
-                this.interval = this.bigBreak;
+            } else if (this.currentIteration == 8) {
+                this.currentInterval = this.longBreak;
                 this.alertText = `You finished your ${
-                    this.bigBreak / 60000
+                    this.longBreak / 60000
                 }min break! Let's get back to work!`;
             }
 
@@ -110,7 +111,7 @@ export default class Pomodoro {
             }
 
             this.timer = setTimeout(() => {
-                this.time++;
+                this.currentIteration++;
 
                 //Send Text Alerts
                 if (this.textAlerts) {
@@ -130,7 +131,7 @@ export default class Pomodoro {
 
                 //Start a New Cycle
                 this.startANewCycle();
-            }, this.interval);
+            }, this.currentInterval);
         } catch (err) {
             console.log(err);
         }

@@ -23,16 +23,16 @@ export class PomodoroStatusCommand extends Command {
         let timePassed = now.getTime() - pomodoro[0].timerStartedTime.getTime();
         let timeLeft;
 
-        if (pomodoro[0].time % 2 != 0) {
+        if (pomodoro[0].currentIteration % 2 != 0) {
             timeLeft = Math.floor((pomodoro[0].workTime - timePassed) / 60000);
             message.channel.send(
                 `${timeLeft + 1}min left to your break! Keep it up!`
             );
-        } else if (pomodoro[0].time % 2 == 0 && pomodoro[0].time != 8) {
-            timeLeft = Math.floor((pomodoro[0].smallBreak - timePassed) / 60000);
+        } else if (pomodoro[0].currentIteration % 2 == 0 && pomodoro[0].currentIteration != 8) {
+            timeLeft = Math.floor((pomodoro[0].shortBreak - timePassed) / 60000);
             message.channel.send(`${timeLeft + 1}min left to start working!`);
         } else {
-            timeLeft = Math.floor((pomodoro[0].bigBreak - timePassed) / 60000);
+            timeLeft = Math.floor((pomodoro[0].longBreak - timePassed) / 60000);
             message.channel.send(`${timeLeft + 1}min left to start working!`);
         }
     }
