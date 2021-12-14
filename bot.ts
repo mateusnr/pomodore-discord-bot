@@ -8,6 +8,7 @@ dotenv.config();
 const client = new SapphireClient({
     defaultPrefix: 'pd!',
     loadDefaultErrorListeners: false,
+    typing: true,
     intents: [
         Intents.FLAGS.GUILDS, 
         Intents.FLAGS.DIRECT_MESSAGES, 
