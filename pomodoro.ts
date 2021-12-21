@@ -101,7 +101,7 @@ export default class Pomodoro {
                 const intervalResource = createAudioResource('sounds/time-over.ogg', { inputType: StreamType.OggOpus });
                 this.player!.play(intervalResource);
 
-                this.player!.on(AudioPlayerStatus.Idle, (state) => {
+                this.player!.once(AudioPlayerStatus.Idle, (state) => {
 					const silenceFixerResource = createAudioResource('./sounds/silence-fixer.ogg', {
 						inputType: StreamType.OggOpus 
 					});
