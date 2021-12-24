@@ -3,7 +3,7 @@ import { Args, Command, CommandOptions } from "@sapphire/framework";
 import type { Message } from "discord.js";
 import PomodoroContainer from "../container";
 import Pomodoro from "../pomodoro";
-import { handleArgs } from "../utils";
+import { EnsureNoPomodoroRunning, handleArgs } from "../utils";
 
 @ApplyOptions<CommandOptions>({
     name: 'start',
@@ -11,6 +11,7 @@ import { handleArgs } from "../utils";
 
 })
 export class PomodoroStartCommand extends Command {
+    @EnsureNoPomodoroRunning
     public async messageRun(message: Message, args: Args) {
         const container = PomodoroContainer.getInstance();
         const workTime = await handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 45, this);
@@ -18,15 +19,6 @@ export class PomodoroStartCommand extends Command {
         const bigBreak = await handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 15, this);
 
         if (message.member?.voice.channel) {
-            let pomodoro = container.pomodoros.filter(
-                (pomodoro) => pomodoro.guild.id == message.guild!.id
-            );
-
-            if (pomodoro.length > 0) {
-                message.channel.send("There's already a pomodoro running!");
-                return;
-            }
-
             try {
                 container.addPomodoro(
                     new Pomodoro(
@@ -52,6 +44,7 @@ export class PomodoroStartCommand extends Command {
             );
             return;
         }
+
         message.channel.send("Pomodoro started! Let's get to work!");
     }
 }
