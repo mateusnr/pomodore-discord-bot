@@ -5,7 +5,8 @@ import { EnsurePomodoroRunning, PomodoroCommand } from "../utils";
 
 @ApplyOptions<CommandOptions>({
     name: 'status',
-    description: `Check a this.pomodoro!'s current status`
+    description: `Check a this.pomodoro!'s current status`,
+	aliases: ['st']
 })
 export class PomodoroStatusCommand extends PomodoroCommand {
     @EnsurePomodoroRunning

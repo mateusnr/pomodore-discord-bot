@@ -7,8 +7,8 @@ import { EnsureNoPomodoroRunning, handleArgs } from "../utils";
 
 @ApplyOptions<CommandOptions>({
     name: 'start',
-    description: 'Starts a pomodoro'
-
+    description: 'Starts a pomodoro',
+	aliases: ['s']
 })
 export class PomodoroStartCommand extends Command {
     @EnsureNoPomodoroRunning
