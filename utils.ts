@@ -16,7 +16,7 @@ export async function handleArgs<T extends ArgType[keyof ArgType]>(argPicker: Pr
 export const EnsureNoPomodoroRunning = (_target: Object, _key: string | symbol, descriptor: PropertyDescriptor) => {
     const originalMethod = descriptor.value;
 
-    descriptor.value = function (this: (...args: any[]) => any, message: Message, ...args: any[]) {
+    descriptor.value = function (this: PomodoroCommand, message: Message, ...args: any[]) {
         const pomodoro = PomodoroContainer.getInstance().findPomodoro(message.guild!.id);
         if (pomodoro) {
             throw new UserError({
@@ -31,7 +31,7 @@ export const EnsureNoPomodoroRunning = (_target: Object, _key: string | symbol, 
 export const EnsurePomodoroRunning = (_target: Object, _key: string | symbol, descriptor: PropertyDescriptor) => {
     const originalMethod = descriptor.value;
 
-    descriptor.value = function (this: any, message: Message, ...args: any[]) {
+    descriptor.value = function (this: PomodoroCommand, message: Message, ...args: any[]) {
         const pomodoro = PomodoroContainer.getInstance().findPomodoro(message.guild!.id);
         if (!pomodoro) {
             throw new UserError({

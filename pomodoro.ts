@@ -15,13 +15,13 @@ export default class Pomodoro {
     guild: Discord.Guild;
     message: Discord.Message;
 
-    textAlerts: boolean;
-    volume: number;
+    textAlerts: boolean = true;
+    volume: number = 0.5;
 
     peopleToDm: string[];
 
     timerStartedTime: Date; 
-    alertText: string; 
+    alertText: string = ''; 
 
     timer?: NodeJS.Timeout;
     player?: AudioPlayer;
@@ -29,8 +29,8 @@ export default class Pomodoro {
     constructor(
         client: Discord.Client,
         workTime: number,
-        smallBreak: number,
-        bigBreak: number,
+        shortBreak: number,
+        longBreak: number,
         guild: Discord.Guild,
         message: Discord.Message,
         textOnly: boolean
@@ -38,15 +38,12 @@ export default class Pomodoro {
         this.client = client;
         this.guild = guild;
         this.workTime = workTime;
-        this.shortBreak = smallBreak;
-        this.longBreak = bigBreak;
+        this.shortBreak = shortBreak;
+        this.longBreak = longBreak;
         this.peopleToDm = [];
-        this.textAlerts = true;
-        this.volume = 0.5;
         this.message = message;
         this.currentIteration = 1;
         this.timerStartedTime = new Date();
-        this.alertText = '';
         this.textOnly = textOnly;
 
         if (!this.textOnly) {
@@ -59,6 +56,7 @@ export default class Pomodoro {
         }
 
         this.startANewCycle();
+		this.client.logger.info(`Started pomodoro on server (${this.guild.id}, ${this.guild.name})`);
     }
 
     enterVoiceChannel(voiceChannel: Discord.VoiceChannel) {
@@ -142,26 +140,24 @@ export default class Pomodoro {
         if (!this.textOnly) {
             this.player!.stop();
         }
+
+		this.client.logger.info(`Pomodoro on server (${this.guild.id}, ${this.guild.name}) stopped`);
     }
 
     addToDM(id: string, message: Discord.Message) {
         if (this.peopleToDm.filter((person) => person == id).length == 0) {
             this.peopleToDm.push(id);
-            message.reply('You will now receive the alerts via Direct Message!');
+            message.reply('DM alerts enabled!');
         } else {
             this.peopleToDm = this.peopleToDm.filter((person) => person != id);
-            message.reply('You will stop receiving the alerts via Direct Message!');
+            message.reply('DM alerts disabled!');
         }
     }
 
     toggleNotifications(message: Discord.Message) {
         this.textAlerts = !this.textAlerts;
 
-        if (this.textAlerts) {
-            message.channel.send('The text notifications have been turned on!');
-        } else {
-            message.channel.send('The text notifications have been turned off!');
-        }
+		message.channel.send('Text notifications have been turned ' + (this.textAlerts ? 'on' : 'off') + '!');
     }
 
     changeVolume(volume: number) {

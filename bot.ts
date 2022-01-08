@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import { Intents } from 'discord.js';
 import PomodoroContainer from './container';
 import { SapphireClient } from '@sapphire/framework';
+import '@sapphire/plugin-logger/register';
 
 dotenv.config();
 
@@ -23,7 +24,7 @@ if (process.env.SH_TOKEN == '' || process.env.SH_TOKEN == undefined) {
 }
 
 client.on('ready', () => {
-    console.log('Pomodoro bot started');
+	client.logger.info('Bot started');
     client.user!.setActivity('Type pd!help');
 });
 
@@ -31,6 +32,6 @@ let container = PomodoroContainer.getInstance();
 
 setInterval(() => {
     container.pomodoros.forEach((pomodoro) => {
-        console.log(`Server: ${pomodoro.guild.name} (${pomodoro.guild.id}), Iteration: ${pomodoro.currentIteration} Type: ${pomodoro.textOnly ? 'text' : 'voice'}`);
+        client.logger.info(`Server: ${pomodoro.guild.name} (${pomodoro.guild.id}), Iteration: ${pomodoro.currentIteration} Type: ${pomodoro.textOnly ? 'text' : 'voice'}`);
     });
 }, 600000);
