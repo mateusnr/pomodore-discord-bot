@@ -116,6 +116,8 @@ export default class Pomodoro {
                     this.message.channel.send(this.alertText);
                 }
 
+				this.client.logger.info(`Pomodoro on server (${this.guild.name}, ${this.guild.id}) is on the iteration ${this.currentIteration}. Type: ${this.textOnly ? 'text' : 'voice'}`);
+
                 //Send DM Alerts
                 if (this.peopleToDm.length > 0) {
                     this.peopleToDm.forEach((user) => {
