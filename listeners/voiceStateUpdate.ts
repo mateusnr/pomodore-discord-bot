@@ -17,6 +17,7 @@ export class VoiceStateUpdateListener extends Listener<typeof Events.VoiceStateU
 				const numOfParticipants = channelMembers.size;
 
 				if (numOfParticipants > 1 && channelMembers.has(this.container.client.id!)) { // another person joined, cancel timeout 
+					this.container.logger.info('A user has joined, cancel timeout');
 					clearTimeout(this.timeout);
 					delete this.timeout;
 				}
@@ -27,6 +28,7 @@ export class VoiceStateUpdateListener extends Listener<typeof Events.VoiceStateU
 
 			if (numOfParticipants == 1 && channelMembers.has(this.container.client.id!)) { // only the bot is on the channel
 				this.timeout = setTimeout(this.closePomodoroAndDisconnect, 3 * MINUTE_IN_MS, oldState.channel as VoiceChannel);
+				this.container.logger.info('All users have left the voice channel, start timeout');
 			}
 		}
 	}
@@ -35,5 +37,6 @@ export class VoiceStateUpdateListener extends Listener<typeof Events.VoiceStateU
 		const connection = getVoiceConnection(channel.guild.id);
 		connection?.destroy();
 		PomodoroContainer.getInstance().removePomodoro(channel.guild.id);
+		delete this.timeout;
 	}
 }
