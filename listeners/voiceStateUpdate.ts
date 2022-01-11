@@ -36,7 +36,12 @@ export class VoiceStateUpdateListener extends Listener<typeof Events.VoiceStateU
 	closePomodoroAndDisconnect(channel: VoiceChannel) {
 		const connection = getVoiceConnection(channel.guild.id);
 		connection?.destroy();
-		PomodoroContainer.getInstance().removePomodoro(channel.guild.id);
+
+		const instance = PomodoroContainer.getInstance();
+		const pomodoro = instance.findPomodoro(channel.guild.id)!;
+		clearTimeout(pomodoro.timer!);
+
+		instance.removePomodoro(channel.guild.id);
 		delete this.timeout;
 	}
 }
