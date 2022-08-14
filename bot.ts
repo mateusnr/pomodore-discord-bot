@@ -8,6 +8,7 @@ dotenv.config();
 
 const client = new SapphireClient({
     defaultPrefix: 'pd!',
+    loadMessageCommandListeners: true, 
     loadDefaultErrorListeners: false,
     typing: true,
     i18n: {

@@ -3,11 +3,11 @@ import type { Message } from "discord.js";
 import PomodoroContainer from "./container";
 import Pomodoro from "./pomodoro";
 
-export async function handleArgs<T extends ArgType[keyof ArgType]>(argPicker: Promise<T>, defaultValue: number, ctx: Command) {
+export async function handleArgs<T extends ArgType[keyof ArgType]>(argPicker: Promise<T>, defaultValue: number) {
     return argPicker.catch((error) => {
-        if (error.identifier === 'numberTooLarge' || error.identifier === 'numberTooSmall') {
-            throw new UserError({ identifier: 'OutOfBoundsInterval', message: 'Please insert a number between 5 and 120', context: ctx.toJSON() });
-        } else if (error.identifier === 'argsMissing') {
+        if (error.value.identifier === 'numberTooLarge' || error.value.identifier === 'numberTooSmall') {
+            throw new UserError({ identifier: 'OutOfBoundsInterval', message: 'Please insert a number between 5 and 120' });
+        } else if (error.value.identifier === 'argsMissing') {
             return defaultValue;
         }
     });

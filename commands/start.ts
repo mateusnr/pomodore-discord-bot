@@ -15,9 +15,13 @@ export class PomodoroStartCommand extends Command {
     @EnsureNoPomodoroRunning
     public async messageRun(message: Message, args: Args) {
         const container = PomodoroContainer.getInstance();
-        const workTime = await handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 45, this);
-        const smallBreak = await handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 15, this);
-        const bigBreak = await handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 15, this);
+
+        const workTime = await handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 45);
+        const shortBreak = await handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 15);
+        const longBreak = await handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 15);
+        /*const workTime = args.finished ? 45 : await args.pick('number', { minimum: 5, maximum: 120 });
+        const shortBreak = args.finished ? 15 : await args.pick('number', { minimum: 5, maximum: 120 });
+        const longBreak = args.finished ? 15 : await args.pick('number', { minimum: 5, maximum: 120 });*/
 
         if (message.member?.voice.channel) {
             try {
@@ -25,8 +29,8 @@ export class PomodoroStartCommand extends Command {
                     new Pomodoro(
                         this.container.client,
                         workTime! * 60000,
-                        smallBreak! * 60000,
-                        bigBreak! * 60000,
+                        shortBreak! * 60000,
+                        longBreak! * 60000,
                         message.guild!,
                         message,
                         false

@@ -13,9 +13,9 @@ import { handleArgs } from "../utils";
 export class PomodoroTextStartCommand extends Command {
     public async messageRun(message: Message, args: Args) {
         const container = PomodoroContainer.getInstance();
-        const workTime = await handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 45, this);
-        const smallBreak = await handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 15, this);
-        const bigBreak = await handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 15, this);
+        const workTime = await handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 45);
+        const smallBreak = await handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 15);
+        const bigBreak = await handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 15);
 
         let pomodoro = container.pomodoros.filter(
             (pomodoro) => pomodoro.guild.id == message.guild!.id
