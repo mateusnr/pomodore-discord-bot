@@ -1,5 +1,5 @@
 import { ApplyOptions } from "@sapphire/decorators";
-import { Args, Command, CommandOptions } from "@sapphire/framework";
+import { Args, Command, CommandOptions, UserError } from "@sapphire/framework";
 import type { Message } from "discord.js";
 import PomodoroContainer from "../container";
 import Pomodoro from "../pomodoro";
@@ -13,10 +13,20 @@ import { handleArgs } from "../utils";
 export class PomodoroTextStartCommand extends Command {
     public async messageRun(message: Message, args: Args) {
         const container = PomodoroContainer.getInstance();
-        const workTime = await handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 45);
-        const smallBreak = await handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 15);
-        const bigBreak = await handleArgs(args.pick('number', { minimum: 5, maximum: 120 }), 15);
 
+        let workTime: number, shortBreak: number, longBreak: number;
+        let areArgsOk = true;
+        try {
+            workTime = args.finished ? 45 : await args.pick('number', { minimum: 5, maximum: 120 });
+            shortBreak = args.finished ? 15 : await args.pick('number', { minimum: 5, maximum: 120 });
+            longBreak = args.finished ? 15 : await args.pick('number', { minimum: 5, maximum: 120 });
+        } catch (err) {
+            areArgsOk = false;
+        }
+
+        if (!areArgsOk) {
+            throw new UserError({ identifier: 'OutOfBoundsInterval', message: 'Please insert a number between 5 and 120' });
+        }
         let pomodoro = container.pomodoros.filter(
             (pomodoro) => pomodoro.guild.id == message.guild!.id
         );
@@ -32,8 +42,8 @@ export class PomodoroTextStartCommand extends Command {
                 new Pomodoro(
                     this.container.client,
                     workTime! * 60000,
-                    smallBreak! * 60000,
-                    bigBreak! * 60000,
+                    shortBreak! * 60000,
+                    longBreak! * 60000,
                     message.guild!,
                     message,
                     true
