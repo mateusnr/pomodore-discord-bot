@@ -1,4 +1,4 @@
-import { Args, Command, CommandOptions, UserError } from "@sapphire/framework";
+import { Args, Command, UserError } from "@sapphire/framework";
 import { sendLocalized } from "@sapphire/plugin-i18next";
 import type { Message } from "discord.js";
 import PomodoroContainer from "../container";
@@ -11,7 +11,7 @@ export class PomodoroStartCommand extends Command {
             name: 'start',
             description: 'Starts a pomodoro',
             aliases: ['s'],
-            // preconditions: ['NoPomodoroRunning']
+            preconditions: ['NoPomodoroRunning']
         });
     }
 

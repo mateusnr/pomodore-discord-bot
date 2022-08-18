@@ -1,0 +1,8 @@
+{
+    "started": "Pomodoro started! Let's get to work!",
+    "userInVoiceChannelRequired": "You have to be in a voice channel to start",
+    "errorWhenJoiningVoiceChannel": "Error when joining a voice channel. Please check my permissions",
+    "OutOfBoundsInterval": "Please insert a number between 5 and 120",
+    "PomodoroAlreadyRunning": "There's already a pomodoro running!",
+    "PomodoroNotFound": "There's no pomodoro currently running"
+}
