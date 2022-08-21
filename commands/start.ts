@@ -1,5 +1,5 @@
 import { Args, Command, UserError } from "@sapphire/framework";
-import { sendLocalized } from "@sapphire/plugin-i18next";
+import { resolveKey } from "@sapphire/plugin-i18next";
 import type { Message } from "discord.js";
 import PomodoroContainer from "../container";
 import Pomodoro from "../pomodoro";
@@ -59,6 +59,6 @@ export class PomodoroStartCommand extends Command {
             return;
         }
 
-        await sendLocalized(message, 'start:started');
+        await message.channel.send(await resolveKey(message, 'start:started'));
     }
 }
